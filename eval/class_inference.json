@@ -1,0 +1,60 @@
+{
+  "ddinter_drugs": 1939,
+  "ddinter_drugs_with_atc_class": 1382,
+  "results": [
+    {
+      "share": 0.5,
+      "min_siblings": 2,
+      "drugs_evaluated": 323,
+      "precision": 0.72,
+      "recall": 0.618,
+      "major_recall": 0.633,
+      "predicted_pairs": 42682
+    },
+    {
+      "share": 0.5,
+      "min_siblings": 3,
+      "drugs_evaluated": 274,
+      "precision": 0.745,
+      "recall": 0.589,
+      "major_recall": 0.632,
+      "predicted_pairs": 33149
+    },
+    {
+      "share": 0.67,
+      "min_siblings": 2,
+      "drugs_evaluated": 323,
+      "precision": 0.866,
+      "recall": 0.461,
+      "major_recall": 0.469,
+      "predicted_pairs": 26456
+    },
+    {
+      "share": 0.67,
+      "min_siblings": 3,
+      "drugs_evaluated": 274,
+      "precision": 0.877,
+      "recall": 0.443,
+      "major_recall": 0.469,
+      "predicted_pairs": 21207
+    },
+    {
+      "share": 0.8,
+      "min_siblings": 2,
+      "drugs_evaluated": 323,
+      "precision": 0.904,
+      "recall": 0.414,
+      "major_recall": 0.403,
+      "predicted_pairs": 22758
+    },
+    {
+      "share": 0.8,
+      "min_siblings": 3,
+      "drugs_evaluated": 274,
+      "precision": 0.928,
+      "recall": 0.388,
+      "major_recall": 0.389,
+      "predicted_pairs": 17509
+    }
+  ]
+}
