@@ -1,0 +1,39 @@
+{
+  "_note": "Synthetic people and prescriptions (the rules allow only public, synthetic or own data). Brand names are real Indian brands from the public Kaggle dataset; no real patient is described.",
+  "families": [
+    {
+      "person": {"id": "p-amma", "name": "Lakshmi (72)", "age": 72},
+      "carers": [["c-ravi", "Ravi (son)"], ["c-divya", "Divya (daughter)"]],
+      "prescriptions": [
+        {"id": "rx-amma-1", "date": "2026-09-02", "doctor": {"id": "d-rao", "name": "Dr. Rao", "speciality": "General physician"},
+         "items": [["Telma 40", "1 morning"], ["Glycomet 500", "1 after dinner"], ["Thyronorm 50", "1 empty stomach"]]},
+        {"id": "rx-amma-2", "date": "2026-09-20", "doctor": {"id": "d-menon", "name": "Dr. Menon", "speciality": "Cardiologist"},
+         "items": [["Ecosprin 75", "1 after lunch"], ["Atorva 10", "1 at night"]]},
+        {"id": "rx-amma-3", "date": "2026-10-12", "doctor": {"id": "d-shetty", "name": "Dr. Shetty", "speciality": "Orthopaedic"},
+         "items": [["Aceclo Plus", "1 twice a day for 5 days"], ["Pan 40", "1 before breakfast"]]},
+        {"id": "rx-amma-4", "date": "2026-10-13", "doctor": {"id": "d-chemist", "name": "Chemist (fever)", "speciality": "Over the counter"},
+         "items": [["Dolo 650", "1 if fever"]]}
+      ]
+    },
+    {
+      "person": {"id": "p-appa", "name": "Suresh (68)", "age": 68},
+      "carers": [["c-ravi", "Ravi (son)"]],
+      "prescriptions": [
+        {"id": "rx-appa-1", "date": "2026-08-10", "doctor": {"id": "d-iyer", "name": "Dr. Iyer", "speciality": "Cardiologist"},
+         "items": [["Warf 5", "1 at night"], ["Amlong 5", "1 morning"]]},
+        {"id": "rx-appa-2", "date": "2026-10-05", "doctor": {"id": "d-khan", "name": "Dr. Khan", "speciality": "Dentist"},
+         "items": [["Zerodol SP", "1 twice a day for 3 days"], ["Augmentin 625", "1 twice a day for 5 days"]]}
+      ]
+    },
+    {
+      "person": {"id": "p-nani", "name": "Fatima (80)", "age": 80},
+      "carers": [["c-sameer", "Sameer (grandson)"]],
+      "prescriptions": [
+        {"id": "rx-nani-1", "date": "2026-07-01", "doctor": {"id": "d-gupta", "name": "Dr. Gupta", "speciality": "Diabetologist"},
+         "items": [["Glycomet 500", "1 twice a day"], ["Galvus 50", "1 morning"]]},
+        {"id": "rx-nani-2", "date": "2026-09-15", "doctor": {"id": "d-paul", "name": "Dr. Paul", "speciality": "ENT"},
+         "items": [["Vertin 16", "1 thrice a day"], ["Stugeron 25", "1 at night"]]}
+      ]
+    }
+  ]
+}
