@@ -6,7 +6,8 @@ result, but the findings themselves come only from graph paths.
 from graph_tools import GraphTools
 from memory import Memory, finding_key
 
-LEVEL_ORDER = {"Major": 0, "Moderate": 1, "class": 2, "Minor": 3, "Unknown": 4, "": 5}
+# Most actionable first: same salt twice, Major, unverified class signals, then Moderate.
+TYPE_ORDER = {"DUPLICATE": 0, "Major": 1, "CLASS_SIGNAL": 2, "Moderate": 3}
 
 
 def check(tools: GraphTools, memory: Memory, pid, include_minor=False):
@@ -57,6 +58,6 @@ def check(tools: GraphTools, memory: Memory, pid, include_minor=False):
     signalled = {c["salt_without_data"] for c in signals}
     no_data = [n for n in tools.no_data(ids) if n["salt"] not in signalled]
 
-    findings.sort(key=lambda f: (LEVEL_ORDER.get(f["level"], 9), f["type"]))
+    findings.sort(key=lambda f: TYPE_ORDER.get(f["level"] if f["type"] == "INTERACTION" else f["type"], 9))
     new, known = memory.record(pid, findings)
     return {"active": active, "new": new, "already_known": known, "no_data": no_data}

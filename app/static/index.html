@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DawaiGraph</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2316181d%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3ED%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark">D</span>
+    <div>
+      <h1>DawaiGraph</h1>
+      <p>One list of everything they take, across every doctor and every brand name.</p>
+    </div>
+  </div>
+  <div class="who">
+    <label>Viewing as
+      <select id="carer"></select>
+    </label>
+  </div>
+</header>
+
+<nav id="people" class="people"></nav>
+
+<main class="layout">
+  <section class="col">
+    <div class="card">
+      <div class="card-head">
+        <h2>Medicines now</h2>
+        <span id="med-count" class="muted"></span>
+      </div>
+      <div id="meds"></div>
+    </div>
+
+    <div class="card">
+      <h2>Add a prescription</h2>
+      <div class="row">
+        <input id="doctor" placeholder="Doctor, e.g. Dr. Shetty">
+        <input id="speciality" placeholder="Speciality (optional)">
+      </div>
+      <div class="search">
+        <input id="q" placeholder="Type a brand as written on the slip, e.g. Zerodol SP" autocomplete="off">
+        <div id="suggest" class="suggest"></div>
+      </div>
+      <ul id="draft" class="draft"></ul>
+      <button id="save" class="primary" disabled>Save and check</button>
+    </div>
+  </section>
+
+  <section class="col wide">
+    <div class="card">
+      <div class="card-head">
+        <h2>What to ask the doctor</h2>
+        <span id="summary" class="muted"></span>
+      </div>
+      <div id="findings"></div>
+      <div id="nodata"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>The graph behind it</h2>
+        <span class="legend"><i class="lg brand"></i>brand <i class="lg salt"></i>salt <i class="lg gray"></i>no data <i class="lg cls"></i>drug class <i class="lg major"></i>interaction <i class="lg sig"></i>class signal</span>
+      </div>
+      <div id="graph"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Not medical advice. DawaiGraph never tells anyone to stop a medicine; it lists questions to take to the doctor who prescribed it.
+  "No data" means no data, not "safe". Interactions: DDInter (CC BY-NC-SA 4.0). Brands and 2022 MRPs: A-Z Medicine Dataset of India (CC BY-SA 4.0). Drug classes: Wikidata (CC0). People shown are synthetic.
+</footer>
+
+<script src="/static/vendor/cytoscape.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
