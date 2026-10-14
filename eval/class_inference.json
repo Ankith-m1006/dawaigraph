@@ -4,57 +4,84 @@
   "results": [
     {
       "share": 0.5,
-      "min_siblings": 2,
-      "drugs_evaluated": 323,
-      "precision": 0.72,
-      "recall": 0.618,
-      "major_recall": 0.633,
-      "predicted_pairs": 42682
+      "min_siblings": 3,
+      "drugs_evaluated": 272,
+      "precision": 0.705,
+      "recall": 0.625,
+      "major_recall": 0.654,
+      "predicted_pairs": 36968
     },
     {
       "share": 0.5,
-      "min_siblings": 3,
-      "drugs_evaluated": 274,
-      "precision": 0.745,
-      "recall": 0.589,
-      "major_recall": 0.632,
-      "predicted_pairs": 33149
-    },
-    {
-      "share": 0.67,
-      "min_siblings": 2,
-      "drugs_evaluated": 323,
-      "precision": 0.866,
-      "recall": 0.461,
-      "major_recall": 0.469,
-      "predicted_pairs": 26456
+      "min_siblings": 5,
+      "drugs_evaluated": 195,
+      "precision": 0.697,
+      "recall": 0.576,
+      "major_recall": 0.59,
+      "predicted_pairs": 23652
     },
     {
       "share": 0.67,
       "min_siblings": 3,
-      "drugs_evaluated": 274,
-      "precision": 0.877,
-      "recall": 0.443,
-      "major_recall": 0.469,
-      "predicted_pairs": 21207
+      "drugs_evaluated": 272,
+      "precision": 0.829,
+      "recall": 0.479,
+      "major_recall": 0.497,
+      "predicted_pairs": 24101
     },
     {
-      "share": 0.8,
-      "min_siblings": 2,
-      "drugs_evaluated": 323,
-      "precision": 0.904,
-      "recall": 0.414,
-      "major_recall": 0.403,
-      "predicted_pairs": 22758
+      "share": 0.67,
+      "min_siblings": 5,
+      "drugs_evaluated": 195,
+      "precision": 0.802,
+      "recall": 0.426,
+      "major_recall": 0.406,
+      "predicted_pairs": 15169
     },
     {
       "share": 0.8,
       "min_siblings": 3,
-      "drugs_evaluated": 274,
-      "precision": 0.928,
-      "recall": 0.388,
-      "major_recall": 0.389,
-      "predicted_pairs": 17509
+      "drugs_evaluated": 272,
+      "precision": 0.874,
+      "recall": 0.43,
+      "major_recall": 0.441,
+      "predicted_pairs": 20519
+    },
+    {
+      "share": 0.8,
+      "min_siblings": 5,
+      "drugs_evaluated": 195,
+      "precision": 0.868,
+      "recall": 0.379,
+      "major_recall": 0.351,
+      "predicted_pairs": 12470
+    },
+    {
+      "share": 0.9,
+      "min_siblings": 3,
+      "drugs_evaluated": 272,
+      "precision": 0.894,
+      "recall": 0.352,
+      "major_recall": 0.363,
+      "predicted_pairs": 16401
+    },
+    {
+      "share": 0.9,
+      "min_siblings": 5,
+      "drugs_evaluated": 195,
+      "precision": 0.905,
+      "recall": 0.264,
+      "major_recall": 0.243,
+      "predicted_pairs": 8325
     }
-  ]
+  ],
+  "production_setting": {
+    "share": 0.8,
+    "min_siblings": 3,
+    "drugs_evaluated": 272,
+    "precision": 0.874,
+    "recall": 0.43,
+    "major_recall": 0.441,
+    "predicted_pairs": 20519
+  }
 }

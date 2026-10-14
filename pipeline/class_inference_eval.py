@@ -36,16 +36,23 @@ for d, cs in classes.items():
 
 
 def predict(x, share, min_sib):
-    sibs = set().union(*(members[c] for c in classes[x])) - {x}
-    sibs = {s for s in sibs if edges[s]}
-    if len(sibs) < min_sib:
+    """Same rule as cypher/class_signal.cypher: per ATC class, siblings with data, y itself excluded."""
+    usable = [c for c in classes[x] if len({s for s in members[c] if edges[s]} - {x}) >= min_sib]
+    if not usable:
         return None
-    votes = collections.Counter()
-    for s in sibs:
-        for y, lvl in edges[s].items():
-            if lvl in SERIOUS and y != x:
-                votes[y] += 1
-    return {y for y, v in votes.items() if v / len(sibs) >= share}
+    pred = set()
+    for c in usable:
+        sibs = {s for s in members[c] if edges[s]} - {x}
+        votes = collections.Counter()
+        for s in sibs:
+            for y, lvl in edges[s].items():
+                if lvl in SERIOUS and y != x:
+                    votes[y] += 1
+        for y, v in votes.items():
+            n = len(sibs - {y})
+            if n >= min_sib and v / n >= share:
+                pred.add(y)
+    return pred
 
 
 def evaluate(share, min_sib, sample):
@@ -78,5 +85,6 @@ sample = random.sample(pool, min(400, len(pool)))
 print(json.dumps({
     "ddinter_drugs": len(edges),
     "ddinter_drugs_with_atc_class": len(pool),
-    "results": [evaluate(s, m, sample) for s in (0.5, 0.67, 0.8) for m in (2, 3)],
+    "results": [evaluate(s, m, sample) for s in (0.5, 0.67, 0.8, 0.9) for m in (3, 5)],
+    "production_setting": evaluate(0.8, 3, sample),
 }, indent=2))
