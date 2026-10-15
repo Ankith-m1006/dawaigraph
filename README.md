@@ -86,6 +86,22 @@ Salt coverage of the Indian data: 76.7% of active brand-salt uses map to a DDInt
 
 Read this honestly: DawaiGraph scores 100% because the graph is built from the same tables, so this run checks that the queries return exactly what the data says. The point is the right-hand column. The same model that writes DawaiGraph's explanations, asked without the graph, misses 60% of the listed interactions and adds 52 that DDInter does not list (some may be real interactions DDInter lacks, which is why DawaiGraph shows its source for every finding). Full output: [`eval/baselines.json`](eval/baselines.json).
 
+## Use it from any AI assistant (MCP)
+
+[`app/mcp_server.py`](app/mcp_server.py) exposes the graph as an MCP server, read-only on purpose (it checks medicines but never writes a family's memory):
+
+| Tool | What it does |
+|---|---|
+| `resolve_brand` | Brand name as written on a strip (typos and missing strengths are fine) to brand ids with salts |
+| `check_regimen` | Same salt twice, DDInter interactions, unverified class signals and salts with no data, each with its graph path |
+| `cheaper_same_salt` | Same salts and strengths at a lower MRP |
+
+Claude Desktop or any MCP client:
+
+```json
+{"mcpServers": {"dawaigraph": {"command": "<repo>/.venv/Scripts/python.exe", "args": ["<repo>/app/mcp_server.py"]}}}
+```
+
 ## Run it
 
 Requirements: Python 3.11+, a FalkorDB instance (FalkorDB Cloud free tier, or `docker run -p 6379:6379 falkordb/falkordb`).

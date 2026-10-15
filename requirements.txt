@@ -3,3 +3,4 @@ fastapi>=0.118
 uvicorn>=0.29
 pandas>=2.0
 kaggle>=1.6
+mcp>=2.0
