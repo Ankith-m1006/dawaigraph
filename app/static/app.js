@@ -311,5 +311,20 @@ if (Recognition && window.isSecureContext) {
   };
 }
 
+// ---------- doctor visit sheet ----------
+$("#visit-btn").onclick = async () => {
+  const v = await api(`/api/person/${current.id}/visit`);
+  $("#visit-body").innerHTML = `<h1>${esc(t("visit_title"))}: ${esc(v.person)}</h1><div class="sub">${esc(v.date)}</div>` +
+    (v.doctors.length ? v.doctors.map((d) => `<section><h3>${esc(d.doctor)}</h3>` +
+      (d.medicines.length ? `<div class="meds">${esc(t("visit_meds"))}: ${d.medicines.map(esc).join(", ")}</div>` : "") +
+      `<ol>${d.questions.map((q) => `<li><span class="box"></span>${esc(q.summary)}</li>`).join("")}</ol></section>`).join("")
+      : `<p>${esc(t("visit_none"))}</p>`) +
+    (v.no_data.length ? `<section><b>${esc(t("nodata_title"))}</b> ${v.no_data.map((n) => `${esc(n.salt)} (${esc(n.brand_name)})`).join(", ")}</section>` : "") +
+    `<p class="muted small">${esc(t("visit_note"))}</p>`;
+  $("#visit").hidden = false;
+};
+$("#visit-close").onclick = () => { $("#visit").hidden = true; };
+$("#visit-print").onclick = () => window.print();
+
 applyLanguage();
 loadPeople();

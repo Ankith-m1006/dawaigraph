@@ -3,11 +3,14 @@
     uvicorn server:app --app-dir app --port 8000
 """
 import base64
+import collections
 import datetime
+import os
+import time
 import pathlib
 import uuid
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -107,6 +110,24 @@ def stop(pid: str, brand_id: int):
     return check(tools, memory, pid)
 
 
+@app.get("/api/person/{pid}/visit")
+def visit_sheet(pid: str):
+    """Everything to raise at the next appointments, grouped by the doctor to ask (from the remembered findings)."""
+    result = check(tools, memory, pid)
+    open_findings = [f for f in result["new"] + result["already_known"] if f.get("status", "open") in ("open", "asked_doctor")]
+    by_doctor = {}
+    for f in open_findings:
+        for d in f["doctors"]:
+            by_doctor.setdefault(d, []).append({"type": f["type"], "level": f.get("level", ""), "summary": f["summary"], "status": f.get("status", "open")})
+    meds = {}
+    for a in result["active"]:
+        meds.setdefault(a["doctor"], []).append(a["brand"])
+    person = rows("MATCH (p:Person {id: $pid}) RETURN p.name AS name", {"pid": pid})
+    return {"person": person[0]["name"] if person else pid, "date": datetime.date.today().isoformat(),
+            "doctors": [{"doctor": d, "medicines": meds.get(d, []), "questions": q} for d, q in sorted(by_doctor.items())],
+            "no_data": result["no_data"]}
+
+
 @app.get("/api/brand/{brand_id}/cheaper")
 def cheaper(brand_id: int):
     return tools.cheaper_same_salt(brand_id, 5)
@@ -171,8 +192,27 @@ class ChatMessage(BaseModel):
     image_type: str = "image/jpeg"
 
 
+# The agent spends Gemini credits, so a public deployment limits it per client address.
+AGENT_LIMIT = int(os.environ.get("AGENT_LIMIT_PER_10MIN", "20"))
+_calls = collections.defaultdict(collections.deque)
+
+
+def _allow(client):
+    now = time.time()
+    q = _calls[client]
+    while q and now - q[0] > 600:
+        q.popleft()
+    if len(q) >= AGENT_LIMIT:
+        return False
+    q.append(now)
+    return True
+
+
 @app.post("/api/agent")
-def chat(msg: ChatMessage):
+def chat(msg: ChatMessage, request: Request):
+    client = (request.headers.get("x-forwarded-for") or (request.client.host if request.client else "?")).split(",")[0].strip()
+    if not _allow(client):
+        raise HTTPException(429, "Too many questions in a short time; please wait a few minutes.")
     chat_id = msg.chat_id or uuid.uuid4().hex
     history = chats.get(chat_id, [])
     text = msg.message

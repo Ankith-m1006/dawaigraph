@@ -1,6 +1,7 @@
 // Interface strings. The chat itself replies in any of 12 Indian languages; the interface ships in English, Hindi and Kannada.
 const I18N = {
   en: {
+    visit: "Doctor visit sheet", print: "Print or save as PDF", close: "Close", visit_title: "Questions for the doctors", visit_meds: "Prescribed by this doctor", visit_none: "Nothing open to ask about right now.", visit_note: "Prepared with DawaiGraph from the family's medicine list. Not medical advice; take it to the appointment.",
     tagline: "Every medicine, every doctor, one safe list",
     viewing_as: "Viewing as",
     tab_ask: "Ask", tab_alerts: "Alerts", tab_meds: "Medicines", tab_graph: "Graph",
@@ -27,6 +28,7 @@ const I18N = {
     footer: "Not medical advice. DawaiGraph never tells anyone to stop a medicine; it lists questions for the doctor who prescribed it. \"No data\" means no data, not \"safe\". Sources: DDInter (CC BY-NC-SA 4.0), A-Z Medicine Dataset of India (CC BY-SA 4.0), Wikidata (CC0). People shown are synthetic.",
   },
   hi: {
+    visit: "डॉक्टर विज़िट शीट", print: "प्रिंट करें या PDF सहेजें", close: "बंद करें", visit_title: "डॉक्टरों से पूछने के सवाल", visit_meds: "इन डॉक्टर ने लिखी दवाएँ", visit_none: "अभी पूछने के लिए कुछ खुला नहीं है।", visit_note: "परिवार की दवा सूची से DawaiGraph द्वारा तैयार। यह चिकित्सा सलाह नहीं है; इसे अपॉइंटमेंट पर ले जाएँ।",
     tagline: "हर दवा, हर डॉक्टर, एक सुरक्षित सूची",
     viewing_as: "देख रहे हैं",
     tab_ask: "पूछें", tab_alerts: "चेतावनियाँ", tab_meds: "दवाएँ", tab_graph: "ग्राफ़",
@@ -53,6 +55,7 @@ const I18N = {
     footer: "यह चिकित्सा सलाह नहीं है। DawaiGraph किसी को दवा बंद करने को नहीं कहता; यह लिखने वाले डॉक्टर के लिए सवाल बताता है। \"डेटा नहीं\" का मतलब \"सुरक्षित\" नहीं। स्रोत: DDInter, A-Z Medicine Dataset of India, Wikidata। दिखाए गए लोग काल्पनिक हैं।",
   },
   kn: {
+    visit: "ವೈದ್ಯರ ಭೇಟಿ ಹಾಳೆ", print: "ಮುದ್ರಿಸಿ ಅಥವಾ PDF ಉಳಿಸಿ", close: "ಮುಚ್ಚಿ", visit_title: "ವೈದ್ಯರನ್ನು ಕೇಳಬೇಕಾದ ಪ್ರಶ್ನೆಗಳು", visit_meds: "ಈ ವೈದ್ಯರು ಬರೆದ ಔಷಧಿಗಳು", visit_none: "ಈಗ ಕೇಳಲು ಏನೂ ಬಾಕಿ ಇಲ್ಲ.", visit_note: "ಕುಟುಂಬದ ಔಷಧಿ ಪಟ್ಟಿಯಿಂದ DawaiGraph ಸಿದ್ಧಪಡಿಸಿದೆ. ಇದು ವೈದ್ಯಕೀಯ ಸಲಹೆ ಅಲ್ಲ; ಭೇಟಿಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ.",
     tagline: "ಪ್ರತಿ ಔಷಧಿ, ಪ್ರತಿ ವೈದ್ಯರು, ಒಂದೇ ಸುರಕ್ಷಿತ ಪಟ್ಟಿ",
     viewing_as: "ನೋಡುತ್ತಿರುವವರು",
     tab_ask: "ಕೇಳಿ", tab_alerts: "ಎಚ್ಚರಿಕೆಗಳು", tab_meds: "ಔಷಧಿಗಳು", tab_graph: "ಗ್ರಾಫ್",
