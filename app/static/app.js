@@ -280,7 +280,12 @@ async function send(preset) {
   try {
     const out = await api("/api/agent", { method: "POST", body: JSON.stringify(body) });
     chatId = out.chat_id;
-    waiting.innerHTML = md(out.reply) + (out.tools.length ? `<span class="tools">${esc(t("tools"))}: ${out.tools.map((x) => esc(x.tool)).join(" → ")}</span>` : "");
+    const trace = out.tools.length
+      ? `<details class="trace"><summary>${esc(t("how"))} · ${out.tools.length} ${esc(t("steps"))}</summary><ol>${out.tools.map((x) =>
+          `<li><b>${esc(x.tool)}</b> <span class="muted">${esc(Object.values(x.args || {}).filter((v) => typeof v !== "object").join(", "))}</span> → ${esc(x.summary || "")}` +
+          (x.cypher && x.cypher.length ? `<div class="cy">${x.cypher.map((c) => `<code>${esc(c.includes(":") ? c : c + ".cypher")}</code>`).join(" ")}</div>` : "") + `</li>`).join("")}</ol></details>`
+      : "";
+    waiting.innerHTML = md(out.reply) + trace;
     await refresh();
   } catch (e) {
     waiting.innerHTML = `<span class="muted">${esc(String(e).slice(0, 160))}</span>`;
@@ -319,6 +324,7 @@ $("#visit-btn").onclick = async () => {
       (d.medicines.length ? `<div class="meds">${esc(t("visit_meds"))}: ${d.medicines.map(esc).join(", ")}</div>` : "") +
       `<ol>${d.questions.map((q) => `<li><span class="box"></span>${esc(q.summary)}</li>`).join("")}</ol></section>`).join("")
       : `<p>${esc(t("visit_none"))}</p>`) +
+    (v.start_with ? `<section><b>${esc(t("start_with"))}:</b> ${esc(v.start_with.brand_name)} (${esc(v.start_with.salt)}): ${esc(t("hub_note", { n: v.start_with.serious }))}</section>` : "") +
     (v.no_data.length ? `<section><b>${esc(t("nodata_title"))}</b> ${v.no_data.map((n) => `${esc(n.salt)} (${esc(n.brand_name)})`).join(", ")}</section>` : "") +
     `<p class="muted small">${esc(t("visit_note"))}</p>`;
   $("#visit").hidden = false;

@@ -31,6 +31,7 @@ Rules:
 - Use the tools for every fact. Brand names, salts, interactions, duplicates, class signals and prices come only from tool results. If a tool returns nothing, say you have no data; never fill gaps from your own knowledge.
 - When reading a prescription, call resolve_brand for every medicine. If the best match is weak, or two candidates are close, ask the user which one they mean before saving; show the candidates with their salts.
 - Save a prescription with add_prescription only after every brand is resolved, then call check_person and explain the result.
+- When there are several findings, call risk_hubs and say which medicine is the most connected to risks, so it is raised first.
 - Explain findings in plain words for a son or daughter, most important first: same salt twice, Major interactions, unverified class signals, then Moderate ones. For each, say which doctors to ask and show the path from the tool (brand -> salt -> ... -> brand).
 - A class signal is unverified: say it is based on similar drugs and is a question for the doctor, not a known interaction.
 - "No data" is not "safe": name the medicines without data and suggest asking the doctor or pharmacist.
@@ -74,10 +75,35 @@ TOOLS = [{"functionDeclarations": [
     {"name": "check_person",
      "description": "Run every graph check over a person's current medicines: same salt twice, known interactions (DDInter), unverified class signals for salts without data, and salts with no data. Findings are remembered; already-known ones are marked.",
      "parameters": {"type": "object", "properties": {"person_id": {"type": "string"}}, "required": ["person_id"]}},
+    {"name": "risk_hubs",
+     "description": "Rank the salts a person takes by degree centrality in the interaction network (how many Major/Moderate interactions each salt has across all medicines). The top one is the medicine to raise with the doctor first.",
+     "parameters": {"type": "object", "properties": {"person_id": {"type": "string"}}, "required": ["person_id"]}},
     {"name": "cheaper_same_salt",
      "description": "Brands with exactly the same salts and strengths at a lower MRP (2022 prices).",
      "parameters": {"type": "object", "properties": {"brand_id": {"type": "integer"}}, "required": ["brand_id"]}},
 ]}]
+
+
+# Which Cypher files each tool runs, so every answer can show how it was reached.
+CYPHER_OF = {
+    "resolve_brand": ["resolve_brand"],
+    "check_person": ["duplicate_salts", "known_interactions", "class_signal", "no_data"],
+    "risk_hubs": ["risk_hubs"],
+    "cheaper_same_salt": ["cheaper_same_salt"],
+    "add_prescription": ["memory: MERGE Rx, LISTS, TAKES"],
+    "get_medicines": ["memory: active TAKES"],
+    "list_people": ["memory: Person, CARES_FOR"],
+}
+
+
+def _summarise(name, result):
+    if isinstance(result, list):
+        return f"{len(result)} result(s)"
+    if isinstance(result, dict) and name == "check_person":
+        return f"{len(result['new']) + len(result['already_known'])} finding(s), {len(result['no_data'])} without data"
+    if isinstance(result, dict) and "saved" in result:
+        return f"saved {result['saved']} medicine(s)"
+    return "done"
 
 
 class Agent:
@@ -113,6 +139,9 @@ class Agent:
                     "already_known": [slim(f) for f in result["already_known"]],
                     "no_data": [{"brand": n["brand_name"], "salt": n["salt"]} for n in result["no_data"]],
                     "medicines": len(result["active"])}
+        if name == "risk_hubs":
+            ids = list(dict.fromkeys(a["brand_id"] for a in self.memory.active(args["person_id"])))
+            return self.tools.risk_hubs(ids)[:5]
         if name == "cheaper_same_salt":
             return self.tools.cheaper_same_salt(int(args["brand_id"]), 3)
         return {"error": f"unknown tool {name}"}
@@ -155,7 +184,8 @@ class Agent:
                     result = self._call_tool(call["name"], call.get("args", {}))
                 except Exception as e:  # report tool errors to the model instead of failing the turn
                     result = {"error": str(e)[:300]}
-                trace.append({"tool": call["name"], "args": call.get("args", {}), "result": result})
+                trace.append({"tool": call["name"], "args": call.get("args", {}), "result": result,
+                              "cypher": CYPHER_OF.get(call["name"], []), "summary": _summarise(call["name"], result)})
                 response = {"name": call["name"], "response": {"result": result}}
                 if "id" in call:
                     response["id"] = call["id"]

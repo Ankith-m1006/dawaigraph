@@ -79,3 +79,7 @@ class GraphTools:
 
     def cheaper_same_salt(self, brand_id, limit=5):
         return self.run("cheaper_same_salt", {"brand_id": brand_id, "limit": limit})
+
+    def risk_hubs(self, brand_ids):
+        """Salts in the regimen ranked by degree centrality in the interaction network (Major/Moderate links)."""
+        return self.run("risk_hubs", {"brand_ids": brand_ids})

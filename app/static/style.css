@@ -97,6 +97,10 @@ select { border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; 
 .bubble.bot hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .bubble.bot p { margin: 4px 0; }
 .bubble.bot code { font-size: 12px; background: #fff; border-radius: 5px; padding: 1px 4px; }
+.trace { margin-top: 8px; font-size: 12px; color: var(--ink-2); border-top: 1px solid var(--line); padding-top: 6px; }
+.trace summary { cursor: pointer; font-weight: 600; color: var(--brand); }
+.trace ol { margin: 6px 0 0; padding-left: 18px; } .trace li { margin: 3px 0; }
+.trace .cy { margin-top: 2px; } .trace code { font-size: 11px; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0 4px; }
 .bubble .tools { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); }
 .composer { display: flex; gap: 6px; align-items: center; padding: 10px 12px; border-top: 1px solid var(--line); background: #fff; }
 .composer input { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; background: var(--soft); }

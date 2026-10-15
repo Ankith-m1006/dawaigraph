@@ -123,7 +123,9 @@ def visit_sheet(pid: str):
     for a in result["active"]:
         meds.setdefault(a["doctor"], []).append(a["brand"])
     person = rows("MATCH (p:Person {id: $pid}) RETURN p.name AS name", {"pid": pid})
+    hubs = tools.risk_hubs(list(dict.fromkeys(a["brand_id"] for a in result["active"])))
     return {"person": person[0]["name"] if person else pid, "date": datetime.date.today().isoformat(),
+            "start_with": hubs[0] if hubs else None,
             "doctors": [{"doctor": d, "medicines": meds.get(d, []), "questions": q} for d, q in sorted(by_doctor.items())],
             "no_data": result["no_data"]}
 
@@ -255,4 +257,4 @@ def chat(msg: ChatMessage, request: Request):
     reply, trace, history = agent.run(history, text, image, msg.image_type)
     # Keep whole conversations: trimming could split a function call from its response.
     chats[chat_id] = history
-    return {"chat_id": chat_id, "reply": reply, "tools": [{"tool": t["tool"], "args": t["args"]} for t in trace]}
+    return {"chat_id": chat_id, "reply": reply, "tools": [{"tool": t["tool"], "args": t["args"], "cypher": t.get("cypher", []), "summary": t.get("summary", "")} for t in trace]}

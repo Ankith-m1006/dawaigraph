@@ -12,6 +12,7 @@ What a carer can do:
 - See the same salt twice (including one brand from two doctors), interactions, unverified class signals and "no data", each with the graph path and the doctors to ask.
 - Mark a finding "asked the doctor" so the rest of the family sees it, and print a **doctor visit sheet**: one checklist per doctor for the next appointment.
 - Use the graph from any AI assistant through the read-only **MCP server**.
+- Open **"How I got this"** under any answer: every graph step the agent took, the Cypher it ran and what came back, so each decision can be traced.
 
 ![DawaiGraph](docs/v2-desktop-alerts.png)
 
@@ -68,6 +69,7 @@ All in [`cypher/`](cypher):
 | [`class_signal`](cypher/class_signal.cypher) | The gap-filling traversal through drug-class siblings for salts with no data |
 | [`no_data`](cypher/no_data.cypher) | Salts with no data and nothing to reason from, so the app says "no data", never "safe" |
 | [`cheaper_same_salt`](cypher/cheaper_same_salt.cypher) | Brands with exactly the same salts and strengths at a lower MRP |
+| [`risk_hubs`](cypher/risk_hubs.cypher) | **Degree centrality** of each salt in the interaction network: the medicine with the most Major/Moderate links is the one to raise first (the agent's `risk_hubs` tool and the visit sheet's "Raise this first") |
 
 The memory writes are in [`app/memory.py`](app/memory.py).
 
