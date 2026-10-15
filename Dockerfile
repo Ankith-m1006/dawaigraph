@@ -5,6 +5,7 @@ COPY requirements-app.txt .
 RUN pip install --no-cache-dir -r requirements-app.txt
 COPY app ./app
 COPY cypher ./cypher
+COPY data/synthetic/families.json ./data/synthetic/families.json
 COPY pipeline/db.py pipeline/normalise.py ./pipeline/
 EXPOSE 8080
 CMD ["sh", "-c", "uvicorn server:app --app-dir app --host 0.0.0.0 --port ${PORT:-8080}"]

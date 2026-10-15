@@ -1,6 +1,7 @@
 .venv
 .git
-data
+data/raw
+eval
 eval
 docs
 *.env

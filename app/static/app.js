@@ -326,5 +326,10 @@ $("#visit-btn").onclick = async () => {
 $("#visit-close").onclick = () => { $("#visit").hidden = true; };
 $("#visit-print").onclick = () => window.print();
 
+$("#reset-demo").onclick = async () => {
+  $("#reset-demo").disabled = true;
+  try { await api("/api/demo/reset", { method: "POST" }); chatId = ""; await loadPeople(); } finally { $("#reset-demo").disabled = false; }
+};
+
 applyLanguage();
 loadPeople();

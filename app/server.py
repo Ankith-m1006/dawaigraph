@@ -128,6 +128,32 @@ def visit_sheet(pid: str):
             "no_data": result["no_data"]}
 
 
+DEMO = pathlib.Path(__file__).resolve().parent.parent / "data" / "synthetic" / "families.json"
+
+
+@app.post("/api/demo/reset")
+def reset_demo():
+    """Put the three synthetic families back to their starting state (the public demo is shared by every visitor)."""
+    if not _allow("demo-reset"):
+        raise HTTPException(429, "The demo was reset a moment ago.")
+    import json
+    for label in ("Finding", "Rx", "Doctor", "Carer", "Person"):
+        tools.g.query(f"MATCH (n:{label}) DETACH DELETE n")
+    chats.clear()
+    for f in json.loads(DEMO.read_text(encoding="utf-8"))["families"]:
+        p = f["person"]
+        memory.add_person(p["id"], p["name"], p.get("age"), [tuple(c) for c in f["carers"]])
+        for rx in f["prescriptions"]:
+            items = []
+            for name, dose in rx["items"]:
+                hit = tools.resolve_brand(name, 1)
+                if hit:
+                    items.append({"brand_id": hit[0]["id"], "dose": dose})
+            memory.add_prescription(p["id"], rx["id"], rx["date"], rx["doctor"], items)
+        check(tools, memory, p["id"])
+    return {"reset": True}
+
+
 @app.get("/api/brand/{brand_id}/cheaper")
 def cheaper(brand_id: int):
     return tools.cheaper_same_salt(brand_id, 5)
