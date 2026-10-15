@@ -13,10 +13,17 @@ in a later session updates the existing node instead of being raised twice.
 """
 import datetime
 import hashlib
+import re
 
 
 def _now():
     return datetime.datetime.now().isoformat(timespec="seconds")
+
+
+def doctor_id(name):
+    """'Dr. S. Shetty' and 'Dr Shetty' are the same prescriber: drop titles, initials and punctuation."""
+    words = [w for w in re.findall(r"[a-z]+", name.lower()) if w not in {"dr", "doctor", "prof", "mr", "mrs", "ms"} and len(w) > 1]
+    return "d-" + "-".join(words or ["unknown"])
 
 
 def finding_key(kind, *parts):

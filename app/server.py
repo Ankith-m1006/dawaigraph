@@ -2,6 +2,7 @@
 
     uvicorn server:app --app-dir app --port 8000
 """
+import base64
 import datetime
 import pathlib
 import uuid
@@ -11,9 +12,10 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from agent import Agent
 from checker import check
 from graph_tools import GraphTools
-from memory import Memory
+from memory import Memory, doctor_id as make_doctor_id
 
 STATIC = pathlib.Path(__file__).resolve().parent / "static"
 
@@ -21,6 +23,8 @@ app = FastAPI(title="DawaiGraph")
 tools = GraphTools()
 memory = Memory(tools.g)
 memory.ensure_schema()
+agent = Agent(tools, memory)
+chats = {}  # chat id -> Gemini conversation contents (in memory; the graph keeps the durable state)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
@@ -69,7 +73,7 @@ class Prescription(BaseModel):
 
 @app.post("/api/person/{pid}/rx")
 def add_rx(pid: str, rx: Prescription):
-    doctor_id = "d-" + rx.doctor_name.lower().replace(" ", "-").replace(".", "")
+    doctor_id = make_doctor_id(rx.doctor_name)
     memory.add_prescription(
         pid, "rx-" + uuid.uuid4().hex[:8], rx.date or datetime.date.today().isoformat(),
         {"id": doctor_id, "name": rx.doctor_name, "speciality": rx.speciality},
@@ -156,3 +160,28 @@ def graph(pid: str):
             seen.add(k)
             unique.append(e)
     return {"nodes": list(nodes.values()), "edges": unique}
+
+
+class ChatMessage(BaseModel):
+    chat_id: str = ""
+    person_id: str = ""
+    message: str
+    language: str = "English"
+    image_base64: str = ""
+    image_type: str = "image/jpeg"
+
+
+@app.post("/api/agent")
+def chat(msg: ChatMessage):
+    chat_id = msg.chat_id or uuid.uuid4().hex
+    history = chats.get(chat_id, [])
+    text = msg.message
+    if not history and msg.person_id:
+        text = f"(We are talking about person_id {msg.person_id}. Reply in {msg.language}.)\n{text}"
+    elif msg.language != "English":
+        text = f"(Reply in {msg.language}.)\n{text}"
+    image = base64.b64decode(msg.image_base64) if msg.image_base64 else None
+    reply, trace, history = agent.run(history, text, image, msg.image_type)
+    # Keep whole conversations: trimming could split a function call from its response.
+    chats[chat_id] = history
+    return {"chat_id": chat_id, "reply": reply, "tools": [{"tool": t["tool"], "args": t["args"]} for t in trace]}

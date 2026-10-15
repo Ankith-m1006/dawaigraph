@@ -23,6 +23,7 @@ async function loadPeople() {
 
 async function select(pid) {
   current = people.find((p) => p.id === pid);
+  chatId = "";
   $("#people").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.id === pid));
   $("#carer").innerHTML = current.carers.filter((c) => c.id).map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
   draft = [];
@@ -168,5 +169,44 @@ $("#save").onclick = async () => {
   renderDraft();
   await refresh();
 };
+
+let chatId = "";
+let photo = null;
+$("#photo").onchange = () => {
+  photo = $("#photo").files[0] || null;
+  $("#photo-name").textContent = photo ? `Attached: ${photo.name}` : "";
+};
+const bubble = (cls, html) => {
+  const div = document.createElement("div");
+  div.className = `bubble ${cls}`;
+  div.innerHTML = html;
+  $("#chat").appendChild(div);
+  $("#chat").scrollTop = $("#chat").scrollHeight;
+  return div;
+};
+const md = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/^#+ (.*)$/gm, "<b>$1</b>");
+async function send() {
+  const text = $("#ask").value.trim();
+  if (!text && !photo) return;
+  bubble("me", esc(text || "(photo)") + (photo ? " &#128247;" : ""));
+  $("#ask").value = "";
+  const waiting = bubble("bot", "<span class=\"muted\">Checking the graph…</span>");
+  const body = {chat_id: chatId, person_id: current?.id || "", message: text || "Read this prescription.", language: $("#lang").value};
+  if (photo) {
+    body.image_base64 = await new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result.split(",")[1]); r.readAsDataURL(photo); });
+    body.image_type = photo.type || "image/jpeg";
+  }
+  photo = null; $("#photo").value = ""; $("#photo-name").textContent = "";
+  try {
+    const out = await api("/api/agent", {method: "POST", body: JSON.stringify(body)});
+    chatId = out.chat_id;
+    waiting.innerHTML = md(out.reply) + (out.tools.length ? `<span class="tools">graph tools: ${out.tools.map((t) => esc(t.tool)).join(" → ")}</span>` : "");
+    await refresh();
+  } catch (e) {
+    waiting.innerHTML = `<span class="muted">Could not reach the agent: ${esc(String(e).slice(0, 160))}</span>`;
+  }
+}
+$("#send").onclick = send;
+$("#ask").addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
 
 loadPeople();

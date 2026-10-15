@@ -36,6 +36,20 @@
     </div>
 
     <div class="card">
+      <div class="card-head">
+        <h2>Ask DawaiGraph</h2>
+        <select id="lang" title="Reply language"><option>English</option><option>Hindi</option><option>Kannada</option></select>
+      </div>
+      <div id="chat" class="chat"><p class="muted">Type a prescription or attach a photo of it, for example "Dr. Shetty wrote Aceclo Plus twice a day for 5 days". Every finding comes from the graph.</p></div>
+      <div class="chat-input">
+        <input id="ask" placeholder="Ask or paste a prescription" autocomplete="off">
+        <label class="attach" title="Attach a prescription photo">&#128247;<input id="photo" type="file" accept="image/*" hidden></label>
+        <button id="send" class="primary">Send</button>
+      </div>
+      <div id="photo-name" class="muted"></div>
+    </div>
+
+    <div class="card">
       <h2>Add a prescription</h2>
       <div class="row">
         <input id="doctor" placeholder="Doctor, e.g. Dr. Shetty">

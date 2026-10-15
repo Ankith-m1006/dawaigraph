@@ -1,5 +1,5 @@
 falkordb>=1.0
-fastapi>=0.110
+fastapi>=0.118
 uvicorn>=0.29
 pandas>=2.0
 kaggle>=1.6

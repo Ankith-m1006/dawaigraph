@@ -103,6 +103,16 @@ button.primary:disabled { opacity: .35; cursor: default; }
 
 .foot { padding: 8px 28px 32px; color: var(--muted); font-size: 12px; max-width: 980px; }
 
+.chat { max-height: 360px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+.bubble { padding: 9px 12px; border-radius: 12px; font-size: 14px; white-space: pre-wrap; }
+.bubble.me { align-self: flex-end; background: var(--ink); color: #fff; max-width: 85%; }
+.bubble.bot { align-self: flex-start; background: var(--soft); max-width: 100%; }
+.bubble .tools { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); }
+.chat-input { display: flex; gap: 6px; align-items: center; }
+.chat-input input { flex: 1; min-width: 0; }
+.attach { cursor: pointer; font-size: 20px; padding: 0 4px; }
+#lang { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+
 @media (max-width: 860px) {
   .layout { grid-template-columns: 1fr; padding: 16px; }
   .top, .people { padding-left: 16px; padding-right: 16px; }
