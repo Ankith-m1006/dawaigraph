@@ -177,7 +177,10 @@ def chat(msg: ChatMessage):
     history = chats.get(chat_id, [])
     text = msg.message
     if not history and msg.person_id:
-        text = f"(We are talking about person_id {msg.person_id}. Reply in {msg.language}.)\n{text}"
+        found = rows("MATCH (p:Person {id: $pid}) RETURN p.name AS name", {"pid": msg.person_id})
+        name = found[0]["name"] if found else msg.person_id
+        text = (f"(The person selected on screen is {name}, person_id {msg.person_id}. Refer to them by that name. "
+                f"Reply in {msg.language}.)\n{text}")
     elif msg.language != "English":
         text = f"(Reply in {msg.language}.)\n{text}"
     image = base64.b64decode(msg.image_base64) if msg.image_base64 else None
