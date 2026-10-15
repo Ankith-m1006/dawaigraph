@@ -4,6 +4,15 @@
 
 Built for Graph Hacks (WeMakeDevs x FalkorDB, 15-18 Oct 2026). Tracks: **Agents That Act on Connected Data** and **Agent Memory and Coordination**.
 
+**Live:** https://dawaigraph-1037019152152.asia-south1.run.app (synthetic families; "Reset demo data" at the bottom puts them back)
+
+What a carer can do:
+- Type, **speak** (the browser's own speech-to-text) or **photograph** a prescription; the agent reads it, resolves each brand in the graph and asks when a brand is unclear or missing.
+- Ask in **their own language**: the agent replies in the language and script it is asked in (Hindi, Kannada, Tamil, Telugu, Malayalam, Marathi, Bengali, Gujarati, Punjabi, Odia, Urdu, English, Hinglish). The interface itself is in English, Hindi and Kannada.
+- See the same salt twice (including one brand from two doctors), interactions, unverified class signals and "no data", each with the graph path and the doctors to ask.
+- Mark a finding "asked the doctor" so the rest of the family sees it, and print a **doctor visit sheet**: one checklist per doctor for the next appointment.
+- Use the graph from any AI assistant through the read-only **MCP server**.
+
 ![DawaiGraph](docs/v2-desktop-alerts.png)
 
 | Ask (phone) | Alerts in Kannada |
@@ -123,6 +132,8 @@ python pipeline/seed.py --max-brands 70000    # 70k fits the 100 MB free tier; o
 python pipeline/load_families.py              # three synthetic families
 uvicorn server:app --app-dir app --port 8000
 ```
+
+Deployment: the [`Dockerfile`](Dockerfile) runs on Google Cloud Run (asia-south1, scale to zero, one instance). FalkorDB credentials and the Gemini key come from Secret Manager; the agent is rate-limited per client because it spends model credits.
 
 ## Limits (read these)
 
