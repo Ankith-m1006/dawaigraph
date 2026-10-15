@@ -2,95 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
 <title>DawaiGraph</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2316181d%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3ED%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%229%22 fill=%22%230e7c66%22/%3E%3Crect x=%229%22 y=%225%22 width=%2214%22 height=%2222%22 rx=%227%22 fill=%22white%22/%3E%3Crect x=%229%22 y=%2216%22 width=%2214%22 height=%2211%22 rx=%220%22 fill=%22%23ffd166%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<header class="top">
+<header class="appbar">
   <div class="brand">
-    <span class="mark">D</span>
+    <span class="logo" aria-hidden="true"><i></i></span>
     <div>
-      <h1>DawaiGraph</h1>
-      <p>One list of everything they take, across every doctor and every brand name.</p>
+      <strong>DawaiGraph</strong>
+      <small data-i18n="tagline">Every medicine, every doctor, one safe list</small>
     </div>
   </div>
-  <div class="who">
-    <label>Viewing as
-      <select id="carer"></select>
-    </label>
+  <div class="appbar-tools">
+    <select id="ui-lang" aria-label="Interface language">
+      <option value="en">EN</option><option value="hi">हिन्दी</option><option value="kn">ಕನ್ನಡ</option>
+    </select>
   </div>
 </header>
 
-<nav id="people" class="people"></nav>
+<section class="people-bar">
+  <div id="people" class="people"></div>
+  <label class="viewer"><span data-i18n="viewing_as">Viewing as</span> <select id="carer"></select></label>
+</section>
 
-<main class="layout">
-  <section class="col">
-    <div class="card">
-      <div class="card-head">
-        <h2>Medicines now</h2>
-        <span id="med-count" class="muted"></span>
-      </div>
-      <div id="meds"></div>
-    </div>
+<section id="summary" class="summary"></section>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>Ask DawaiGraph</h2>
-        <select id="lang" title="Reply language"><option value="Auto">Auto (my language)</option><option value="English">English</option><option value="Hindi">हिन्दी</option><option value="Kannada">ಕನ್ನಡ</option><option value="Tamil">தமிழ்</option><option value="Telugu">తెలుగు</option><option value="Malayalam">മലയാളം</option><option value="Marathi">मराठी</option><option value="Bengali">বাংলা</option><option value="Gujarati">ગુજરાતી</option><option value="Punjabi">ਪੰਜਾਬੀ</option><option value="Odia">ଓଡ଼ିଆ</option><option value="Urdu">اردو</option></select>
-      </div>
-      <div id="chat" class="chat"><p class="muted">Type a prescription or attach a photo of it, for example "Dr. Shetty wrote Aceclo Plus twice a day for 5 days". Every finding comes from the graph.</p></div>
-      <div class="chat-input">
-        <input id="ask" placeholder="Ask or paste a prescription" autocomplete="off">
-        <button id="mic" class="iconbtn" type="button" title="Speak instead of typing" hidden>&#127908;</button>
-        <label class="attach" title="Attach a prescription photo">&#128247;<input id="photo" type="file" accept="image/*" hidden></label>
-        <button id="send" class="primary">Send</button>
-      </div>
-      <div id="photo-name" class="muted"></div>
-    </div>
+<nav class="tabs" role="tablist">
+  <button data-tab="ask" class="on" data-i18n="tab_ask">Ask</button>
+  <button data-tab="alerts" data-i18n="tab_alerts">Alerts</button>
+  <button data-tab="meds" data-i18n="tab_meds">Medicines</button>
+  <button data-tab="graph" data-i18n="tab_graph">Graph</button>
+</nav>
 
-    <div class="card">
-      <h2>Add a prescription</h2>
-      <div class="row">
-        <input id="doctor" placeholder="Doctor, e.g. Dr. Shetty">
-        <input id="speciality" placeholder="Speciality (optional)">
+<main class="panes">
+  <section id="pane-ask" class="pane on">
+    <div class="card chat-card">
+      <div class="chat-head">
+        <h2 data-i18n="ask_title">Ask DawaiGraph</h2>
+        <select id="lang" aria-label="Reply language" title="Reply language"></select>
       </div>
-      <div class="search">
-        <input id="q" placeholder="Type a brand as written on the slip, e.g. Zerodol SP" autocomplete="off">
-        <div id="suggest" class="suggest"></div>
+      <div id="chat" class="chat">
+        <div class="hint">
+          <p data-i18n="ask_hint">Type or speak a prescription, or attach a photo of it. Every answer comes from the graph.</p>
+          <div class="chips">
+            <button class="chip" data-prompt="ask_p1">What should I ask the doctors?</button>
+            <button class="chip" data-prompt="ask_p2">Is anything taken twice?</button>
+            <button class="chip" data-prompt="ask_p3">Cheaper options with the same salt?</button>
+          </div>
+        </div>
       </div>
-      <ul id="draft" class="draft"></ul>
-      <button id="save" class="primary" disabled>Save and check</button>
+      <div class="composer">
+        <label class="iconbtn" title="Attach a prescription photo"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><input id="photo" type="file" accept="image/*" hidden></label>
+        <input id="ask" autocomplete="off" data-i18n-placeholder="ask_placeholder" placeholder="Ask, or paste a prescription">
+        <button id="mic" class="iconbtn" type="button" title="Speak" hidden><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+        <button id="send" class="send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2-7z"/></svg></button>
+      </div>
+      <div id="photo-name" class="muted small"></div>
     </div>
   </section>
 
-  <section class="col wide">
-    <div class="card">
-      <div class="card-head">
-        <h2>What to ask the doctor</h2>
-        <span id="summary" class="muted"></span>
-      </div>
-      <div id="findings"></div>
-      <div id="nodata"></div>
-    </div>
+  <section id="pane-alerts" class="pane">
+    <div id="findings"></div>
+    <div id="nodata"></div>
+  </section>
 
+  <section id="pane-meds" class="pane">
     <div class="card">
-      <div class="card-head">
-        <h2>The graph behind it</h2>
-        <span class="legend"><i class="lg brand"></i>brand <i class="lg salt"></i>salt <i class="lg gray"></i>no data <i class="lg cls"></i>drug class <i class="lg major"></i>interaction <i class="lg sig"></i>class signal</span>
+      <h2 data-i18n="meds_title">Medicines now</h2>
+      <div id="meds"></div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="add_title">Add a prescription</h2>
+      <div class="row">
+        <input id="doctor" data-i18n-placeholder="doctor_ph" placeholder="Doctor, e.g. Dr. Shetty">
+        <input id="speciality" data-i18n-placeholder="spec_ph" placeholder="Speciality (optional)">
       </div>
+      <div class="search">
+        <input id="q" autocomplete="off" data-i18n-placeholder="brand_ph" placeholder="Brand as written on the strip">
+        <div id="suggest" class="suggest"></div>
+      </div>
+      <ul id="draft" class="draft"></ul>
+      <button id="save" class="primary" disabled data-i18n="save">Save and check</button>
+    </div>
+  </section>
+
+  <section id="pane-graph" class="pane">
+    <div class="card">
+      <h2 data-i18n="graph_title">The graph behind it</h2>
+      <div class="legend"><i class="lg brand"></i><span data-i18n="lg_brand">brand</span><i class="lg salt"></i><span data-i18n="lg_salt">salt</span><i class="lg gray"></i><span data-i18n="lg_nodata">no data</span><i class="lg cls"></i><span data-i18n="lg_class">drug class</span><i class="lg major"></i><span data-i18n="lg_inter">interaction</span><i class="lg sig"></i><span data-i18n="lg_signal">class signal</span></div>
       <div id="graph"></div>
     </div>
   </section>
 </main>
 
-<footer class="foot">
-  Not medical advice. DawaiGraph never tells anyone to stop a medicine; it lists questions to take to the doctor who prescribed it.
-  "No data" means no data, not "safe". Interactions: DDInter (CC BY-NC-SA 4.0). Brands and 2022 MRPs: A-Z Medicine Dataset of India (CC BY-SA 4.0). Drug classes: Wikidata (CC0). People shown are synthetic.
+<footer class="foot" data-i18n="footer">
+  Not medical advice. DawaiGraph never tells anyone to stop a medicine; it lists questions for the doctor who prescribed it. "No data" means no data, not "safe". Sources: DDInter (CC BY-NC-SA 4.0), A-Z Medicine Dataset of India (CC BY-SA 4.0), Wikidata (CC0). People shown are synthetic.
 </footer>
 
 <script src="/static/vendor/cytoscape.min.js"></script>
+<script src="/static/i18n.js"></script>
 <script src="/static/app.js"></script>
 </body>
 </html>

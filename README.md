@@ -4,7 +4,11 @@
 
 Built for Graph Hacks (WeMakeDevs x FalkorDB, 15-18 Oct 2026). Tracks: **Agents That Act on Connected Data** and **Agent Memory and Coordination**.
 
-![DawaiGraph](docs/ui-desktop.png)
+![DawaiGraph](docs/v2-desktop-alerts.png)
+
+| Ask (phone) | Alerts in Kannada |
+|---|---|
+| ![Ask](docs/v2-mobile-ask.png) | ![Kannada](docs/v2-mobile-kn-alerts.png) |
 
 ## The problem
 
