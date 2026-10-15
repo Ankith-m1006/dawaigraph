@@ -222,6 +222,26 @@ async function send() {
     waiting.innerHTML = `<span class="muted">Could not reach the agent: ${esc(String(e).slice(0, 160))}</span>`;
   }
 }
+// Speech to text with the browser's own engine (Chrome/Android, Edge, Safari on macOS and iOS).
+const SPEECH_LANG = {Auto: navigator.language || "en-IN", English: "en-IN", Hindi: "hi-IN", Kannada: "kn-IN", Tamil: "ta-IN", Telugu: "te-IN",
+  Malayalam: "ml-IN", Marathi: "mr-IN", Bengali: "bn-IN", Gujarati: "gu-IN", Punjabi: "pa-IN", Odia: "or-IN", Urdu: "ur-IN"};
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (Recognition) {
+  $("#mic").hidden = false;
+  let rec = null;
+  $("#mic").onclick = () => {
+    if (rec) { rec.stop(); return; }
+    rec = new Recognition();
+    rec.lang = SPEECH_LANG[$("#lang").value] || "en-IN";
+    rec.interimResults = true;
+    rec.onresult = (e) => { $("#ask").value = Array.from(e.results).map((r) => r[0].transcript).join(""); };
+    rec.onend = () => { $("#mic").classList.remove("listening"); rec = null; };
+    rec.onerror = () => { $("#mic").classList.remove("listening"); rec = null; };
+    $("#mic").classList.add("listening");
+    rec.start();
+  };
+}
+
 $("#send").onclick = send;
 $("#ask").addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
 

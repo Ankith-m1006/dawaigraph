@@ -114,6 +114,9 @@ button.primary:disabled { opacity: .35; cursor: default; }
 .bubble .tools { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); }
 .chat-input { display: flex; gap: 6px; align-items: center; }
 .chat-input input { flex: 1; min-width: 0; }
+.iconbtn { font-size: 20px; border: 0; background: none; cursor: pointer; padding: 0 4px; }
+.iconbtn.listening { animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
 .attach { cursor: pointer; font-size: 20px; padding: 0 4px; }
 #lang { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
 

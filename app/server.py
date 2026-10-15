@@ -166,7 +166,7 @@ class ChatMessage(BaseModel):
     chat_id: str = ""
     person_id: str = ""
     message: str
-    language: str = "English"
+    language: str = "Auto"
     image_base64: str = ""
     image_type: str = "image/jpeg"
 
@@ -176,13 +176,15 @@ def chat(msg: ChatMessage):
     chat_id = msg.chat_id or uuid.uuid4().hex
     history = chats.get(chat_id, [])
     text = msg.message
+    lang_note = ("Reply in the language the user writes in." if msg.language == "Auto"
+                 else f"Reply in {msg.language}.")
     if not history and msg.person_id:
         found = rows("MATCH (p:Person {id: $pid}) RETURN p.name AS name", {"pid": msg.person_id})
         name = found[0]["name"] if found else msg.person_id
         text = (f"(The person selected on screen is {name}, person_id {msg.person_id}. Refer to them by that name. "
-                f"Reply in {msg.language}.)\n{text}")
-    elif msg.language != "English":
-        text = f"(Reply in {msg.language}.)\n{text}"
+                f"{lang_note})\n{text}")
+    elif msg.language != "Auto":
+        text = f"({lang_note})\n{text}"
     image = base64.b64decode(msg.image_base64) if msg.image_base64 else None
     reply, trace, history = agent.run(history, text, image, msg.image_type)
     # Keep whole conversations: trimming could split a function call from its response.

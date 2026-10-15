@@ -38,11 +38,12 @@
     <div class="card">
       <div class="card-head">
         <h2>Ask DawaiGraph</h2>
-        <select id="lang" title="Reply language"><option>English</option><option>Hindi</option><option>Kannada</option></select>
+        <select id="lang" title="Reply language"><option value="Auto">Auto (my language)</option><option value="English">English</option><option value="Hindi">हिन्दी</option><option value="Kannada">ಕನ್ನಡ</option><option value="Tamil">தமிழ்</option><option value="Telugu">తెలుగు</option><option value="Malayalam">മലയാളം</option><option value="Marathi">मराठी</option><option value="Bengali">বাংলা</option><option value="Gujarati">ગુજરાતી</option><option value="Punjabi">ਪੰਜਾਬੀ</option><option value="Odia">ଓଡ଼ିଆ</option><option value="Urdu">اردو</option></select>
       </div>
       <div id="chat" class="chat"><p class="muted">Type a prescription or attach a photo of it, for example "Dr. Shetty wrote Aceclo Plus twice a day for 5 days". Every finding comes from the graph.</p></div>
       <div class="chat-input">
         <input id="ask" placeholder="Ask or paste a prescription" autocomplete="off">
+        <button id="mic" class="iconbtn" type="button" title="Speak instead of typing" hidden>&#127908;</button>
         <label class="attach" title="Attach a prescription photo">&#128247;<input id="photo" type="file" accept="image/*" hidden></label>
         <button id="send" class="primary">Send</button>
       </div>
