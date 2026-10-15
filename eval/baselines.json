@@ -1,0 +1,529 @@
+{
+  "model": "gemini-3.5-flash",
+  "regimens": 30,
+  "seed": 11,
+  "dawaigraph": {
+    "duplicate_precision": 1.0,
+    "duplicate_recall": 1.0,
+    "interaction_precision": 1.0,
+    "interaction_recall": 1.0,
+    "claims_outside_ddinter": 0,
+    "dup_tp": 24,
+    "dup_fp": 0,
+    "dup_fn": 0,
+    "int_tp": 119,
+    "int_fp": 0,
+    "int_fn": 0,
+    "outside_ddinter": 0
+  },
+  "llm_only": {
+    "duplicate_precision": 0.75,
+    "duplicate_recall": 0.875,
+    "interaction_precision": 0.462,
+    "interaction_recall": 0.403,
+    "claims_outside_ddinter": 52,
+    "dup_tp": 21,
+    "dup_fp": 7,
+    "dup_fn": 3,
+    "int_tp": 48,
+    "int_fp": 56,
+    "int_fn": 71,
+    "outside_ddinter": 52
+  },
+  "rows": [
+    {
+      "brands": [
+        "Neuromec Plus Injection",
+        "Darzalex Injection",
+        "Revlin M Tablet SR",
+        "Udrel 300mg Tablet",
+        "Fluticare Cream",
+        "Ergomont-L Tablet",
+        "Yesfexo 120 Tablet",
+        "Xplat 100mg Injection",
+        "Remylin D 1000IU Tablet"
+      ],
+      "truth_duplicates": [
+        "mecobalamin"
+      ],
+      "truth_interactions": 1,
+      "graph_interactions": 1,
+      "llm_interactions": 1
+    },
+    {
+      "brands": [
+        "Medroxy 10mg Tablet",
+        "Histop 180mg Tablet",
+        "Krona 2mg/500mg/15mg Tablet",
+        "Lipigo A 10mg/150mg Capsule",
+        "Quinarsol 300mg Tablet",
+        "Coelone 8mg Tablet",
+        "Iprazest Respules",
+        "Nexiflex Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 12,
+      "graph_interactions": 12,
+      "llm_interactions": 7
+    },
+    {
+      "brands": [
+        "Gluxit 5mg Tablet",
+        "Xpom 200mg Tablet",
+        "Zefoxim 500 Tablet",
+        "Tolaz DT 5 Tablet",
+        "Vizocet-M Tablet",
+        "Bortenat 3.5mg Injection",
+        "Flaze 6mg Tablet",
+        "Ventoride Rotacap",
+        "Gluxit S 10mg/100mg Tablet"
+      ],
+      "truth_duplicates": [
+        "dapagliflozin"
+      ],
+      "truth_interactions": 10,
+      "graph_interactions": 10,
+      "llm_interactions": 5
+    },
+    {
+      "brands": [
+        "Febulog 40mg Tablet",
+        "Diclotrans 200 Transdermal Patch",
+        "Ocuvir Skin Cream",
+        "Prolomet T 50 Tablet ER",
+        "Duomate Forte Transcaps",
+        "Vasmed Injection"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 5,
+      "graph_interactions": 5,
+      "llm_interactions": 3
+    },
+    {
+      "brands": [
+        "Galadaz 10mg Tablet",
+        "Turbovas CV 10 Capsule",
+        "Febodec 40mg Tablet",
+        "Fibrobest 5mg Capsule",
+        "Omnikacin 100mg Injection",
+        "Dapahenz M 10mg/500mg Tablet ER",
+        "Hicope 10 Tablet"
+      ],
+      "truth_duplicates": [
+        "hydroxyzine"
+      ],
+      "truth_interactions": 0,
+      "graph_interactions": 0,
+      "llm_interactions": 1
+    },
+    {
+      "brands": [
+        "Nervomin Injection",
+        "Nuloc 20mg Tablet",
+        "Nebistar-H Tablet",
+        "Ulotric 20mg Capsule",
+        "Ovufix 0.03mg/0.15mg Tablet",
+        "Valance OD 750 Tablet PR",
+        "Folivern-F Solution",
+        "Blisto 2 Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 6,
+      "graph_interactions": 6,
+      "llm_interactions": 4
+    },
+    {
+      "brands": [
+        "Lizerton B6 Oral Solution Orange Sugar Free",
+        "Esitor 10mg Tablet",
+        "Esula Plus 0.25mg/5mg Tablet",
+        "Ola 10mg Tablet",
+        "Macpred 1g",
+        "Fexocet Suspension",
+        "Itrozix 100mg Capsule",
+        "Ston 1B6 Oral Solution Raspberry"
+      ],
+      "truth_duplicates": [
+        "escitalopram",
+        "magnesium citrate",
+        "potassium citrate"
+      ],
+      "truth_interactions": 4,
+      "graph_interactions": 4,
+      "llm_interactions": 4
+    },
+    {
+      "brands": [
+        "Floatin 40mg Tablet",
+        "Gasorab 20mg Tablet",
+        "Biozocin 2.5 XL Tablet",
+        "Yevozen 1000mg Injection",
+        "Cefix 100 Tablet",
+        "Zyncet-D Tablet",
+        "Zyrik 300 Tablet",
+        "Attera 10mg Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 2,
+      "graph_interactions": 2,
+      "llm_interactions": 4
+    },
+    {
+      "brands": [
+        "Zypan 40mg Tablet",
+        "Augmentin DDS Suspension",
+        "Ufinate 120mg Injection",
+        "Lametec 50 OD Tablet SR",
+        "Zyncet Tablet",
+        "Oxyrea 100 Injection",
+        "Kolzep Plus 20 mg/5 mg Tablet",
+        "Eslo Tan Tablet",
+        "Walapan-DSR Capsule"
+      ],
+      "truth_duplicates": [
+        "pantoprazole"
+      ],
+      "truth_interactions": 5,
+      "graph_interactions": 5,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Junimol RDS 170mg Suppository",
+        "Rybelsus 3mg Tablet",
+        "Joydiclo-P Tablet",
+        "Deximon P Eye Ointment",
+        "Neocalm 5mg Tablet",
+        "Dapanova M 10mg/1000mg Tablet",
+        "Seromune 500 Tablet"
+      ],
+      "truth_duplicates": [
+        "acetaminophen"
+      ],
+      "truth_interactions": 9,
+      "graph_interactions": 9,
+      "llm_interactions": 6
+    },
+    {
+      "brands": [
+        "Cilentra Plus Tablet",
+        "Ketogate  Eye Drop",
+        "Hibact Ointment",
+        "Lipitab Gold 75mg/10mg/75mg Capsule",
+        "Nancy 200 Capsule",
+        "Petril-MD 0.5 Tablet"
+      ],
+      "truth_duplicates": [
+        "clonazepam"
+      ],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 3
+    },
+    {
+      "brands": [
+        "Lipicure-TG Tablet",
+        "Ibibec Nexcap",
+        "G Met 2mg/500mg Tablet",
+        "Pynomax 500mg Tablet",
+        "Quinax Injection",
+        "Flonida 5% Cream",
+        "Gudcef 100mg Tablet DT",
+        "Itrajet 100 Capsule"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 6,
+      "graph_interactions": 6,
+      "llm_interactions": 5
+    },
+    {
+      "brands": [
+        "Wilmet GP 2mg Tablet",
+        "Zyncet Tablet",
+        "Uniceft 1000mg Injection",
+        "Dolox 20mg Tablet DT",
+        "Bestor 10 Tablet",
+        "Uronir 300mg Tablet",
+        "Jubiglim MV 2 Tablet SR"
+      ],
+      "truth_duplicates": [
+        "glimepiride",
+        "metformin"
+      ],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Glimiprex 2 Tablet",
+        "Metolar AM  25 Tablet",
+        "Glimiprex MF 4mg/500mg Tablet",
+        "Etogen-P 400mg/325mg Tablet",
+        "Zivotel 40mg Tablet",
+        "Travotas 0.004% Eye Drop"
+      ],
+      "truth_duplicates": [
+        "glimepiride"
+      ],
+      "truth_interactions": 4,
+      "graph_interactions": 4,
+      "llm_interactions": 4
+    },
+    {
+      "brands": [
+        "Vilazine 40 Tablet",
+        "Ucozeth 250mg Tablet",
+        "Obimet GX Forte 3mg Tablet SR",
+        "U Hawk 500mg Tablet",
+        "Unitorva 10mg Tablet",
+        "Ketopan Tablet",
+        "Vilano 20 Tablet"
+      ],
+      "truth_duplicates": [
+        "azithromycin",
+        "vilazodone"
+      ],
+      "truth_interactions": 4,
+      "graph_interactions": 4,
+      "llm_interactions": 3
+    },
+    {
+      "brands": [
+        "Clindex Gel",
+        "Itromed-SB 50 Capsule",
+        "Ocona CT 2% Solution",
+        "Dexon Injection",
+        "Tremnil 2mg Tablet",
+        "Britam 50 Tablet",
+        "Taxone OF Tablet",
+        "Tranofast 500mg Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 7,
+      "graph_interactions": 7,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Nidra 5mg Tablet",
+        "Doxt Injection Combipack",
+        "Q Bid 750mg Tablet",
+        "Baromon LC Tablet",
+        "Anxicure 0.5mg Tablet",
+        "Udisen 300 Tablet",
+        "Pramirol SR 2.1 Tablet",
+        "Sleep Well 10mg Tablet"
+      ],
+      "truth_duplicates": [
+        "zolpidem"
+      ],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 6
+    },
+    {
+      "brands": [
+        "Olopine Eye Drops",
+        "Uriliser MB6 Oral Solution Lemon Sugar Free",
+        "Racemol 500mg Tablet",
+        "Floxi Pred Plus Eye Drop",
+        "Zocid Oral Gel",
+        "Karocid 500mg Tablet",
+        "Levi M 5 mg/10 mg Tablet",
+        "Prazosafe XL 2.5 Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 5,
+      "graph_interactions": 5,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Mecolab-PSR Tablet",
+        "Tamsukem Plus Tablet",
+        "Nexpro IV Injection",
+        "Lupiplax Tablet",
+        "Esoprz 40mg Injection",
+        "Ole 2.5mg Tablet",
+        "Pregalin M 75 Capsule"
+      ],
+      "truth_duplicates": [
+        "esomeprazole",
+        "mecobalamin",
+        "pregabalin"
+      ],
+      "truth_interactions": 1,
+      "graph_interactions": 1,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "GLI-ME SR1 Tablet",
+        "Taptrend 50mg Tablet",
+        "Rabitore 20mg Tablet",
+        "Itragreat 200 Capsule",
+        "Caspogin 70mg Injection"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 1,
+      "graph_interactions": 1,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Well Feel 100mg Tablet",
+        "Itel 50mg Tablet",
+        "Cefrotux 500mg Capsule",
+        "Hygrab 20mg Tablet",
+        "Epilive 100mg Injection",
+        "Telx 3D 40/5/6.25 Tablet",
+        "Wypan 40mg Tablet",
+        "BMC Eye Drop",
+        "Kamagra 50mg Tablet"
+      ],
+      "truth_duplicates": [
+        "sildenafil"
+      ],
+      "truth_interactions": 2,
+      "graph_interactions": 2,
+      "llm_interactions": 6
+    },
+    {
+      "brands": [
+        "Methasone Tablet",
+        "Wyproz 20mg Capsule",
+        "Ulfiram 250mg Tablet",
+        "Vhestanil 5mg Tablet",
+        "Clobakem 10mg Tablet",
+        "Paradic Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 4
+    },
+    {
+      "brands": [
+        "Paracold 500mg Tablet",
+        "Atropine Sulphate 1% Eye Ointment",
+        "Axone O 200mg Tablet",
+        "Olarin 0.1% Eye Drop",
+        "Leupo 22.5mg Injection",
+        "Tls AM 40mg/5mg Tablet",
+        "Ultramol 325 mg/37.5 mg Tablet"
+      ],
+      "truth_duplicates": [
+        "acetaminophen"
+      ],
+      "truth_interactions": 2,
+      "graph_interactions": 2,
+      "llm_interactions": 1
+    },
+    {
+      "brands": [
+        "Hipan 40mg Injection",
+        "Q Bid 500mg Tablet",
+        "Ibstatin 20 Tablet",
+        "Thyrox 37.5mcg Tablet",
+        "Stamlo D Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Allerkast LC Tablet",
+        "Pgnor 75mg/10mg Tablet",
+        "ForAir 100 Respicap",
+        "Benzo Beta Tablet",
+        "Wellnerve 2500mcg Injection",
+        "Fibotran 250mg Tablet",
+        "Laveta M  Syrup"
+      ],
+      "truth_duplicates": [
+        "levocetirizine",
+        "montelukast"
+      ],
+      "truth_interactions": 5,
+      "graph_interactions": 5,
+      "llm_interactions": 3
+    },
+    {
+      "brands": [
+        "Kalortat 6mg Oral Suspension Mango",
+        "Intriax 500mg Injection",
+        "Brivup 50 Tablet",
+        "Bam NT 400mg/10mg Tablet",
+        "Cephadex 250 Capsule",
+        "V-Fex Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 0,
+      "graph_interactions": 0,
+      "llm_interactions": 2
+    },
+    {
+      "brands": [
+        "Miorest-Plus Tablet",
+        "Rosukem-A Capsule",
+        "Orlisis 120mg Tablet",
+        "Quortal-H Tablet",
+        "Trexjoy Gel",
+        "Petril-MD 0.5 Tablet"
+      ],
+      "truth_duplicates": [
+        "clonazepam"
+      ],
+      "truth_interactions": 6,
+      "graph_interactions": 6,
+      "llm_interactions": 5
+    },
+    {
+      "brands": [
+        "Azibact 500 Tablet",
+        "Nervic-P Capsule",
+        "Wixzim 50mg Dry Syrup",
+        "Edrucef 500mg Tablet",
+        "Telcure 20 Tablet",
+        "Olmetor-H 40 Tablet",
+        "Buldef 6 Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 5
+    },
+    {
+      "brands": [
+        "Diclogesic Plus 250mg/50mg/325mg Tablet",
+        "Tobrin Eye Drop",
+        "Itranol 100mg Capsule",
+        "Hemkof D Syrup",
+        "Fpstatin 80 Tablet",
+        "Esgipyrin SP Tablet"
+      ],
+      "truth_duplicates": [
+        "diclofenac"
+      ],
+      "truth_interactions": 3,
+      "graph_interactions": 3,
+      "llm_interactions": 3
+    },
+    {
+      "brands": [
+        "Zyven OD Plus 100 mg/0.5 mg Tablet",
+        "Ivalp 250mg Tablet",
+        "Klowin Plus 500mg/37.5mg Tablet",
+        "Udac 150mg Tablet",
+        "Levomax 500mg Tablet"
+      ],
+      "truth_duplicates": [],
+      "truth_interactions": 1,
+      "graph_interactions": 1,
+      "llm_interactions": 5
+    }
+  ]
+}

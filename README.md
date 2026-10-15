@@ -73,6 +73,19 @@ So when DawaiGraph raises a class signal, 87% of the time the held-out data conf
 
 Salt coverage of the Indian data: 76.7% of active brand-salt uses map to a DDInter drug ([`eval/match_rate.json`](eval/match_rate.json)); most of the rest are the India-specific salts described above.
 
+## Graph vs the same model without the graph
+
+[`eval/run_baselines.py`](eval/run_baselines.py) builds 30 regimens of 5 to 9 real Indian brands (half with a deliberately repeated salt) and asks two systems for the duplicate salts and the Major/Moderate interactions between brands: DawaiGraph's Cypher queries, and **Gemini 3.5 Flash given only the brand names** (temperature 0, JSON answer). The ground truth is computed straight from the source tables with pandas, not from the graph.
+
+| 30 regimens, 119 known interactions | DawaiGraph | Gemini 3.5 Flash alone |
+|---|---|---|
+| Interactions found (recall) | **119 / 119** | 48 / 119 (40%) |
+| Interactions stated that are listed in DDInter (precision) | **100%** | 46% |
+| Interactions stated that DDInter does not list | **0** | 52 |
+| Duplicate salts found | **24 / 24** | 21 / 24, plus 7 that are not duplicates |
+
+Read this honestly: DawaiGraph scores 100% because the graph is built from the same tables, so this run checks that the queries return exactly what the data says. The point is the right-hand column. The same model that writes DawaiGraph's explanations, asked without the graph, misses 60% of the listed interactions and adds 52 that DDInter does not list (some may be real interactions DDInter lacks, which is why DawaiGraph shows its source for every finding). Full output: [`eval/baselines.json`](eval/baselines.json).
+
 ## Run it
 
 Requirements: Python 3.11+, a FalkorDB instance (FalkorDB Cloud free tier, or `docker run -p 6379:6379 falkordb/falkordb`).
