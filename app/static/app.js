@@ -184,7 +184,23 @@ const bubble = (cls, html) => {
   $("#chat").scrollTop = $("#chat").scrollHeight;
   return div;
 };
-const md = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/^#+ (.*)$/gm, "<b>$1</b>");
+const md = (text) => {
+  // Small Markdown subset for the agent's replies: headings, rules, bullets, bold and code.
+  const inline = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/(^|[^*])\*([^*]+)\*/g, "$1<i>$2</i>");
+  const out = [];
+  let list = false;
+  for (const raw of text.split("\n")) {
+    const line = raw.trimEnd();
+    const bullet = line.match(/^\s*[*-] (.*)$/);
+    if (bullet) { if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${inline(bullet[1])}</li>`); continue; }
+    if (list) { out.push("</ul>"); list = false; }
+    if (/^-{3,}$/.test(line.trim())) out.push("<hr>");
+    else if (/^#{1,6} /.test(line)) out.push(`<h4>${inline(line.replace(/^#+ /, ""))}</h4>`);
+    else if (line.trim()) out.push(`<p>${inline(line)}</p>`);
+  }
+  if (list) out.push("</ul>");
+  return out.join("");
+};
 async function send() {
   const text = $("#ask").value.trim();
   if (!text && !photo) return;

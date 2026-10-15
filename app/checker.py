@@ -12,9 +12,26 @@ TYPE_ORDER = {"DUPLICATE": 0, "Major": 1, "CLASS_SIGNAL": 2, "Moderate": 3}
 
 def check(tools: GraphTools, memory: Memory, pid, include_minor=False):
     active = memory.active(pid)
-    ids = [a["brand_id"] for a in active]
-    doctor_of = {a["brand_id"]: a["doctor"] for a in active}
+    ids = list(dict.fromkeys(a["brand_id"] for a in active))
+    doctors_of = {}
+    for a in active:
+        doctors_of.setdefault(a["brand_id"], []).append(a["doctor"])
     findings = []
+
+    # The same brand on two active prescriptions (for example two doctors each prescribing Ecosprin 75):
+    # a TAKES edge per prescription, so the brand appears twice in the person's medicines.
+    for a in active:
+        same = [x for x in active if x["brand_id"] == a["brand_id"]]
+        if len(same) > 1 and a is same[0]:
+            who = list(dict.fromkeys(x["doctor"] for x in same))
+            findings.append({
+                "key": finding_key("SAME_BRAND", a["brand_id"], len(same)),
+                "type": "DUPLICATE", "level": "",
+                "summary": f"{a['brand']} is on {len(same)} active prescriptions ({', '.join(who)}), so it may be taken twice.",
+                "brand_ids": [a["brand_id"]],
+                "path": [a["brand"], "PRESCRIBED BY", " and ".join(who)],
+                "doctors": who,
+            })
 
     for d in tools.duplicate_salts(ids):
         findings.append({
@@ -24,7 +41,7 @@ def check(tools: GraphTools, memory: Memory, pid, include_minor=False):
                        f"({d['strength_a'] or '?'} + {d['strength_b'] or '?'}).",
             "brand_ids": [d["brand_a"], d["brand_b"]],
             "path": [d["brand_a_name"], "CONTAINS", d["salt"], "CONTAINS", d["brand_b_name"]],
-            "doctors": sorted({doctor_of[d["brand_a"]], doctor_of[d["brand_b"]]}),
+            "doctors": sorted(set(doctors_of[d["brand_a"]] + doctors_of[d["brand_b"]])),
         })
 
     for i in tools.known_interactions(ids):
@@ -37,7 +54,7 @@ def check(tools: GraphTools, memory: Memory, pid, include_minor=False):
                        f"{i['level']} interaction listed in {i['source']}.",
             "brand_ids": [i["brand_a"], i["brand_b"]],
             "path": [i["brand_a_name"], "CONTAINS", i["salt_a"], f"INTERACTS ({i['level']})", i["salt_b"], "CONTAINS", i["brand_b_name"]],
-            "doctors": sorted({doctor_of[i["brand_a"]], doctor_of[i["brand_b"]]}),
+            "doctors": sorted(set(doctors_of[i["brand_a"]] + doctors_of[i["brand_b"]])),
         })
 
     signals = tools.class_signal(ids)
@@ -52,7 +69,7 @@ def check(tools: GraphTools, memory: Memory, pid, include_minor=False):
             "brand_ids": [c["brand_a"], c["brand_b"]],
             "path": [c["brand_a_name"], "CONTAINS", c["salt_without_data"], "IN_CLASS", c["class_code"], "IN_CLASS",
                      f"{c['agreeing']}/{c['siblings']} siblings", "INTERACTS", c["salt_b"], "CONTAINS", c["brand_b_name"]],
-            "doctors": sorted({doctor_of[c["brand_a"]], doctor_of[c["brand_b"]]}),
+            "doctors": sorted(set(doctors_of[c["brand_a"]] + doctors_of[c["brand_b"]])),
         })
 
     signalled = {c["salt_without_data"] for c in signals}
