@@ -59,5 +59,14 @@ def cheaper_same_salt(brand_id: int, limit: int = 3) -> list[dict]:
     return tools().cheaper_same_salt(int(brand_id), max(1, min(limit, 10)))
 
 
+@server.tool()
+def why_connected(brand_ids: list[int], brand_a: int, brand_b: int) -> dict:
+    """Shortest paths between two brands of a regimen (breadth-first search over their salts, DDInter interactions
+    and class signals). 2 hops = same salt, 3 = salts interact, 4+ = through a drug class or another medicine.
+    No path is not the same as safe."""
+    ids = list(dict.fromkeys(int(b) for b in brand_ids))
+    return tools().connections(ids, int(brand_a), int(brand_b))
+
+
 if __name__ == "__main__":
     server.run("stdio")

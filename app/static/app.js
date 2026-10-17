@@ -1,8 +1,19 @@
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// Each browser is its own family: a random key kept on this device scopes every read and write.
+const familyKey = () => {
+  let k = null;
+  try { k = localStorage.getItem("dawai.family"); } catch { /* private mode */ }
+  if (!k || !/^f[a-z0-9]{6,20}$/.test(k)) {
+    k = "f" + Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => (b % 36).toString(36)).join("");
+    try { localStorage.setItem("dawai.family", k); } catch { /* private mode: a new family per visit */ }
+  }
+  return k;
+};
+const FAMILY = familyKey();
 const api = async (path, opts = {}) => {
-  const r = await fetch(path, { headers: { "Content-Type": "application/json" }, ...opts });
+  const r = await fetch(path, { headers: { "Content-Type": "application/json", "X-Family": FAMILY }, ...opts });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 };

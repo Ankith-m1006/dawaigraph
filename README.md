@@ -4,7 +4,7 @@
 
 Built for Graph Hacks (WeMakeDevs x FalkorDB, 15-18 Oct 2026). Tracks: **Agents That Act on Connected Data** and **Agent Memory and Coordination**.
 
-**Live:** https://dawaigraph-1037019152152.asia-south1.run.app (synthetic families; "Reset demo data" at the bottom puts them back)
+**Live:** https://dawaigraph-1037019152152.asia-south1.run.app (each browser gets its own private copy of three synthetic families; "Reset demo data" at the bottom puts yours back)
 
 What a carer can do:
 - Type, **speak** (the browser's own speech-to-text) or **photograph** a prescription; the agent reads it, resolves each brand in the graph and asks when a brand is unclear or missing.
@@ -13,6 +13,8 @@ What a carer can do:
 - Mark a finding "asked the doctor" so the rest of the family sees it, and print a **doctor visit sheet**: one checklist per doctor for the next appointment.
 - Use the graph from any AI assistant through the read-only **MCP server**.
 - Open **"How I got this"** under any answer: every graph step the agent took, the Cypher it ran and what came back, so each decision can be traced.
+- Ask **"why are these two medicines connected?"**: the agent runs a shortest-path search over the person's medicines and shows every hop, including links that only exist through a third medicine.
+- Trust the names: every medicine named in an answer is checked against what the graph returned in that conversation (see [Guards](#guards)).
 
 ![DawaiGraph](docs/v2-desktop-alerts.png)
 
@@ -51,6 +53,7 @@ Take FalkorDB out and nothing is left: the checks are graph traversals.
 (:Person)-[:HAS_FINDING]->(:Finding {key, type, level, summary, status, raised, updated})-[:ABOUT]->(:Brand)
 (:Carer {id, name})-[:CARES_FOR]->(:Person)
 (:Carer)-[:UPDATED {at, status, note}]->(:Finding)
+(:Tenant {id, created})                                        one per family; Person, Carer, Doctor, Rx and Finding carry `tenant`
 ```
 
 Indexes: range indexes on `Salt.key`, `Brand.id`, `DrugClass.code`, `Person.id`, `Finding.key` and the memory keys; a **full-text index with Double Metaphone phonetic matching** on `Brand.name`, so a misread "Telmaa 40" still finds "Telma 40 Tablet".
@@ -70,6 +73,20 @@ All in [`cypher/`](cypher):
 | [`no_data`](cypher/no_data.cypher) | Salts with no data and nothing to reason from, so the app says "no data", never "safe" |
 | [`cheaper_same_salt`](cypher/cheaper_same_salt.cypher) | Brands with exactly the same salts and strengths at a lower MRP |
 | [`risk_hubs`](cypher/risk_hubs.cypher) | **Degree centrality** of each salt in the interaction network: the medicine with the most Major/Moderate links is the one to raise first (the agent's `risk_hubs` tool and the visit sheet's "Raise this first") |
+| [`regimen_salts`](cypher/regimen_salts.cypher) + [`regimen_interactions`](cypher/regimen_interactions.cypher) | The part of the graph one person's medicines touch, anchored on both ends so it never walks the whole graph; `why_connected` runs a **breadth-first shortest-path search** on it |
+
+### Why are these two connected? (shortest paths)
+
+`why_connected` takes two of a person's medicines as written ("Thyronorm" and "Ecosprin"), builds the regimen graph (brands, salts, DDInter interactions, class signals) and returns every shortest path between them, hop by hop. The hop count is the depth of the link:
+
+| Hops | Meaning | Example (synthetic family "Lakshmi") |
+|---|---|---|
+| 2 | The same salt in both | Aceclo Plus -> CONTAINS -> Acetaminophen -> CONTAINS -> Dolo 650 |
+| 3 | Their salts interact | Telma 40 -> Telmisartan -> INTERACTS (Moderate) -> Acetylsalicylic acid -> Ecosprin 75 |
+| 4+ | Linked through a drug class or **another medicine she takes** | Thyronorm 50 -> Levothyroxine -> INTERACTS (Moderate) -> Pantoprazole (PAN 40) -> INTERACTS (Minor) -> Acetylsalicylic acid -> Ecosprin 75 |
+| none | No shared salt, listed interaction or class signal, directly or through her other medicines | Augmentin 625 and Amlong 5 (for "Suresh"): "no link in the data, which is not the same as safe" |
+
+Each link is a separate pairwise fact; the agent is told never to present a chain as a combined effect. The search runs in Python on the regimen subgraph (tens of nodes, about 0.3 s) instead of `algo.SPpaths` on the whole graph: an unbounded path search over 70,000 brands and 160,000 interactions stalled the free FalkorDB instance during testing.
 
 The memory writes are in [`app/memory.py`](app/memory.py).
 
@@ -110,12 +127,19 @@ Read this honestly: DawaiGraph scores 100% because the graph is built from the s
 | `resolve_brand` | Brand name as written on a strip (typos and missing strengths are fine) to brand ids with salts |
 | `check_regimen` | Same salt twice, DDInter interactions, unverified class signals and salts with no data, each with its graph path |
 | `cheaper_same_salt` | Same salts and strengths at a lower MRP |
+| `why_connected` | Every shortest path between two brands of a regimen, hop by hop |
 
 Claude Desktop or any MCP client:
 
 ```json
 {"mcpServers": {"dawaigraph": {"command": "<repo>/.venv/Scripts/python.exe", "args": ["<repo>/app/mcp_server.py"]}}}
 ```
+
+## Guards
+
+**Families are tenants.** Every browser keeps a random family key and sends it with each request. A family's Person, Carer, Doctor, Rx and Finding nodes carry that key and ids prefixed with it, every memory query is scoped to it, and every id that comes from the page or from the model is checked against it before anything is read or written. A new family starts with its own copy of the synthetic demo, so visitors never see or change each other's data; demo families older than three days are removed. Tested: a second family asking for the first family's person, graph, visit sheet, check, prescription, stop or finding update gets 404, and the agent refuses a person id from another family. The medicine catalogue (Brand, Salt, DrugClass) stays shared in one graph on purpose: a family's TAKES edges must reach the same Brand nodes, and FalkorDB cannot traverse across separate graphs.
+
+**Names come from the graph.** After the agent writes an answer, code collects every medicine word in it (every word of every salt name, and brand words that are not just the first word of a sentence) and checks that each one appeared in a tool result or in the user's own words in that conversation. If one did not, the agent is told which names had no source and rewrites once, looking them up or leaving them out; anything still unverified is flagged under the answer. In testing, the agent wrote "paracetamol" where the data says "Acetaminophen", was caught, and rewrote. The check is in `Agent.name_check` (`app/agent.py`) and shows in "How I got this" as the last step.
 
 ## Run it
 
