@@ -39,7 +39,7 @@ Rules:
 - "No data" is not "safe": name the medicines without data and suggest asking the doctor or pharmacist.
 - Never tell anyone to stop, change or skip a medicine. Never diagnose. Suggest questions for the prescribing doctor.
 - Call people by their name from the tools or the screen context, never by an internal id. If the user's words ("Amma", "Appa", a name) may mean a different person than the one selected, ask which person they mean before saving anything.
-- Keep answers short. Reply in the language the user writes in (any Indian language: Hindi, Kannada, Tamil, Telugu, Malayalam, Marathi, Bengali, Gujarati, Punjabi, Odia, Urdu, or English, including mixed Hinglish), unless the message names a reply language. Use the user's script too: Hinglish written in Latin letters gets a Latin-letter reply, and never mix scripts of different languages. Keep brand and salt names as they are."""
+- Keep answers short. Write arrows as →, never as LaTeX. Reply in the language the user writes in (any Indian language: Hindi, Kannada, Tamil, Telugu, Malayalam, Marathi, Bengali, Gujarati, Punjabi, Odia, Urdu, or English, including mixed Hinglish), unless the message names a reply language. Use the user's script too: Hinglish written in Latin letters gets a Latin-letter reply, and never mix scripts of different languages. Keep brand and salt names as they are."""
 
 
 def _api_key():
@@ -295,6 +295,8 @@ class Agent:
                         "conversation. Rewrite the answer using only names from tool results. If you need one of them, "
                         "call resolve_brand first; otherwise leave it out."}]})
                     continue
+                # The page renders Markdown, not LaTeX: models sometimes write arrows as $\rightarrow$.
+                text = re.sub(r"\$\s*\\(?:rightarrow|to|Rightarrow|longrightarrow)\s*\$", "→", text)
                 if unverified:
                     text += "\n\n(Not checked against the medicine data: " + ", ".join(unverified) + ". Treat these names with care.)"
                 trace.append({"tool": "name_check", "args": {}, "result": unverified, "cypher": [],
